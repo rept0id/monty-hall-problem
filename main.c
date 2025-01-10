@@ -133,6 +133,8 @@ void simulate() {
 
             }
 
+            /*** * * ***/
+
             if (game.playerCurtainIdx == game.winCurtainIdx) {
                 simulation.states[s].playerWinsCount++;
             }
@@ -144,6 +146,8 @@ void logSimulation() {
     if (logHeader) {
         printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
     }
+
+    /*** * * ***/
 
     for (int s=0;s<DEF_STATES;s++) {
         printf(
