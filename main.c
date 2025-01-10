@@ -25,7 +25,6 @@ enum Flag {
 
 int stateGames = DEF_STATE_GAMES;
 int curtains = DEF_CURTAINS;
-
 bool logHeader = DEF_LOG_HEADER;
 
 /*** * * ***/
