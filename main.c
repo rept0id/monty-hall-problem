@@ -25,8 +25,6 @@ enum Flag {
 int stateGames = DEF_STATE_GAMES;
 int curtains = DEF_CURTAINS;
 
-Simulation simulation;
-
 bool logHeader = DEF_LOG_HEADER;
 
 /*** * * ***/
@@ -165,6 +163,10 @@ void logSimulation(Simulation* _simulation) {
 /*** * * ***/
 
 int main(int argc, char* argv[]) {
+    Simulation simulation;
+
+    /*** * * ***/
+
     handleFlags(argc, argv);
 
     /*** * * ***/
