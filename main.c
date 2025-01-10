@@ -8,9 +8,10 @@
 
 /*** * * ***/
 
+#define STATES 4
+
 #define DEF_STATE_GAMES 1000000
 #define DEF_CURTAINS 3
-#define DEF_STATES 4
 #define DEF_LOG_HEADER true
 
 /*** * * ***/
@@ -74,11 +75,11 @@ void initRand() {
 }
 
 void initStatesSimulation(Simulation* _simulation) {
-    _simulation->states = (State *)malloc(DEF_STATES * sizeof(State));
+    _simulation->states = (State *)malloc(STATES * sizeof(State));
 
     /*** * * ***/
 
-    for (int i = 0; i < DEF_STATES; i++) {
+    for (int i = 0; i < STATES; i++) {
         switch (i) {
             case 0:
                 _simulation->states[i].doPlayerChange = true;
@@ -102,7 +103,7 @@ void initStatesSimulation(Simulation* _simulation) {
 
 void simulate(Simulation* _simulation) {
     for (int g=0;g<stateGames;g++) {
-        for (int s=0;s<DEF_STATES;s++) {
+        for (int s=0;s<STATES;s++) {
             Game game;
 
             /*** * * ***/
@@ -147,7 +148,7 @@ void logSimulation(Simulation* _simulation) {
 
     /*** * * ***/
 
-    for (int s=0;s<DEF_STATES;s++) {
+    for (int s=0;s<STATES;s++) {
         printf(
             "%d,%d,%d,%d,%d\n",
 
