@@ -75,34 +75,34 @@ void initRand() {
     srand(time(NULL));
 }
 
-void initStates() {
-    simulation.states = (State *)malloc(DEF_STATES * sizeof(State));
+void initStatesSimulation(Simulation* _simulation) {
+    _simulation->states = (State *)malloc(DEF_STATES * sizeof(State));
 
     /*** * * ***/
 
     for (int i = 0; i < DEF_STATES; i++) {
         switch (i) {
             case 0:
-                simulation.states[i].doPlayerChange = true;
-                simulation.states[i].doHostReveal = true;
+                _simulation->states[i].doPlayerChange = true;
+                _simulation->states[i].doHostReveal = true;
                 break;
             case 1:
-                simulation.states[i].doPlayerChange = true;
-                simulation.states[i].doHostReveal = false;
+                _simulation->states[i].doPlayerChange = true;
+                _simulation->states[i].doHostReveal = false;
                 break;
             case 2:
-                simulation.states[i].doPlayerChange = false;
-                simulation.states[i].doHostReveal = true;
+                _simulation->states[i].doPlayerChange = false;
+                _simulation->states[i].doHostReveal = true;
                 break;
             case 3:
-                simulation.states[i].doPlayerChange = true;
-                simulation.states[i].doHostReveal = false;
+                _simulation->states[i].doPlayerChange = true;
+                _simulation->states[i].doHostReveal = false;
                 break;
         }
     }
 }
 
-void simulate() {
+void simulate(Simulation* _simulation) {
     for (int g=0;g<stateGames;g++) {
         for (int s=0;s<DEF_STATES;s++) {
             Game game;
@@ -112,13 +112,13 @@ void simulate() {
             game.winCurtainIdx = rand() % curtains;
             game.playerCurtainIdx = rand() % curtains;
 
-            if (simulation.states[s].doHostReveal) {
+            if (_simulation->states[s].doHostReveal) {
                 do {
                     game.hostCurtainIdx = rand() % curtains;
                 } while(game.hostCurtainIdx == game.winCurtainIdx);
             }
 
-            if (simulation.states[s].doPlayerChange) {
+            if (_simulation->states[s].doPlayerChange) {
                 int newPlayerCurtainIdx;
 
                 do {
@@ -136,13 +136,13 @@ void simulate() {
             /*** * * ***/
 
             if (game.playerCurtainIdx == game.winCurtainIdx) {
-                simulation.states[s].playerWinsCount++;
+                _simulation->states[s].playerWinsCount++;
             }
         }
     }
 }
 
-void logSimulation() {
+void logSimulation(Simulation* _simulation) {
     if (logHeader) {
         printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
     }
@@ -153,9 +153,9 @@ void logSimulation() {
         printf(
             "%d,%d,%d,%d,%d\n",
 
-            simulation.states[s].doHostReveal,
-            simulation.states[s].doPlayerChange,
-            simulation.states[s].playerWinsCount,
+            _simulation->states[s].doHostReveal,
+            _simulation->states[s].doPlayerChange,
+            _simulation->states[s].playerWinsCount,
             curtains,
             stateGames
         );
@@ -170,15 +170,15 @@ int main(int argc, char* argv[]) {
     /*** * * ***/
 
     initRand();
-    initStates();
+    initStatesSimulation(&simulation);
 
     /*** * * ***/
 
-    simulate();
+    simulate(&simulation);
 
     /*** * * ***/
 
-    logSimulation();
+    logSimulation(&simulation);
 
     /*** * * ***/
 

@@ -15,5 +15,5 @@ typedef struct {
 } State;
 
 typedef struct {
-    State *states;
+    State* states;
 } Simulation;
