@@ -16,6 +16,6 @@ Host Reveal,Player Change,Wins,Curtains,Games
 ```
 
 Optional Flags :
-- "--g x", sets num of games per state, e.g. "./main --g 100000". Default is 1000000.
-- "--c x", sets num of curtains, e.g "./main --c 4". Default is 3.
 - "--log-no-header", prints log without a header.
+- "--c x", sets num of curtains, e.g "./main --c 4". Default is 3.
+- "--sg x", sets num of games per state, e.g. "./main --g 100000". Default is 1000000.
