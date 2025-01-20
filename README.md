@@ -1,4 +1,4 @@
-# monty-hall-paradox
+# monty-hall-problem
 
 ![](./doc/assets/img/header1.png)
 
