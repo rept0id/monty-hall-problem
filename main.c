@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h> // malloc, free
 #include <stdbool.h>
+
 #include <time.h>
 #include <string.h>
+
+#include <omp.h>
 
 #include "./model/main.c"
 
@@ -166,26 +169,27 @@ void initStatesSimulation(Simulation* _simulation) {
     for (int i = 0; i < STATES; i++) {
         switch (i) {
             case 0:
-                _simulation->states[i].doPlayerChange = true;
                 _simulation->states[i].doHostReveal = true;
+                _simulation->states[i].doPlayerChange = false;
                 break;
             case 1:
+                _simulation->states[i].doHostReveal = true;
                 _simulation->states[i].doPlayerChange = true;
-                _simulation->states[i].doHostReveal = false;
                 break;
             case 2:
+                _simulation->states[i].doHostReveal = false;
                 _simulation->states[i].doPlayerChange = false;
-                _simulation->states[i].doHostReveal = true;
                 break;
             case 3:
-                _simulation->states[i].doPlayerChange = true;
                 _simulation->states[i].doHostReveal = false;
+                _simulation->states[i].doPlayerChange = true;
                 break;
         }
     }
 }
 
 void simulate(Simulation* _simulation) {
+    #pragma omp parallel for
     for (int g=0;g<stateGames;g++) {
         for (int s=0;s<STATES;s++) {
             Game game;
@@ -219,6 +223,7 @@ void simulate(Simulation* _simulation) {
             /*** * * ***/
 
             if (game.playerCurtainIdx == game.winCurtainIdx) {
+                #pragma omp atomic
                 _simulation->states[s].playerWinsCount++;
             }
         }
