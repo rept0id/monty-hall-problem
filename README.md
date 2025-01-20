@@ -1,6 +1,6 @@
 # monty-hall-paradox
 
-![](./doc/assets/img/header1.jpg)
+![](./doc/assets/img/header1.png)
 
 ## Build
 
