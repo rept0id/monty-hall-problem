@@ -53,4 +53,4 @@ This differs from the classic game, where the host reveals one of the curtains, 
 
 ## Multiprocessing
 
-This implementation uses **OpenMP** to parallelize the "games" in the simulation, resulting in better performance.
+This implementation uses **OpenMP** to parallelize the "games" in the simulation.
