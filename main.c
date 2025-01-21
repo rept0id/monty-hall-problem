@@ -200,24 +200,99 @@ void simulate(Simulation* _simulation) {
             game.playerCurtainIdx = rand() % curtains;
 
             if (_simulation->states[s].doHostReveal) {
-                do {
-                    game.hostCurtainIdx = rand() % curtains;
-                } while(game.hostCurtainIdx == game.winCurtainIdx);
+                // if curtains are 3, there is only one curtain to switch to,
+                //  as the other is either the winning or the player choosen
+                //  thus, we want a deterministic approach.
+                // else, we want a purely random approach (and not one that just picks the next).
+                if (curtains == 3) {
+                    for (int i=0;i<3;i++) {
+                        if (i == game.winCurtainIdx) {
+                            continue;
+                        }
+
+                        if (i == game.playerCurtainIdx) {
+                            continue;
+                        }
+
+                        /*** * * ***/
+
+                        game.hostCurtainIdx = i;
+                        break;
+                    }
+                } else {
+                    while(1) {
+                        int n;
+
+                        /*** * * ***/
+
+                        n = rand() % curtains;
+
+                        /*** * * ***/
+
+                        if (n == game.winCurtainIdx) {
+                            continue;
+                        }
+
+                        if (n == game.playerCurtainIdx) {
+                            continue;
+                        }
+
+                        /*** * * ***/
+
+                        game.hostCurtainIdx = n;
+                        break;
+                    }
+                }
             }
 
             if (_simulation->states[s].doPlayerChange) {
-                int newPlayerCurtainIdx;
+                // if curtains are 3, there is only one curtain to switch to,
+                //  as the other is either the winning or the host choosen
+                //  thus, we want a deterministic approach.
+                // else, we want a purely random approach (and not one that just picks the next).
+                if (curtains == 3) {
+                    for (int i=0;i<3;i++) {
+                        if (i == game.playerCurtainIdx) {
+                            continue;
+                        }
 
-                do {
-                    newPlayerCurtainIdx = rand() % curtains;
-                } while(
-                    newPlayerCurtainIdx == game.playerCurtainIdx
-                    &&
-                    newPlayerCurtainIdx == game.hostCurtainIdx
-                );
+                        if (_simulation->states[s].doHostReveal) {
+                            if (i == game.hostCurtainIdx) {
+                                continue;
+                            }
+                        }
 
-                game.playerCurtainIdx = newPlayerCurtainIdx;
+                        /*** * * ***/
 
+                        game.playerCurtainIdx = i;
+                        break;
+                    }
+                } else {
+                    while(1) {
+                        int n;
+
+                        /*** * * ***/
+
+                        n = rand() % curtains;
+
+                        /*** * * ***/
+
+                        if (n == game.playerCurtainIdx) {
+                            continue;
+                        }
+
+                        if (_simulation->states[s].doHostReveal) {
+                            if (n == game.hostCurtainIdx) {
+                                continue;
+                            }
+                        }
+
+                        /*** * * ***/
+
+                        game.playerCurtainIdx = n;
+                        break;
+                    }
+                }
             }
 
             /*** * * ***/
