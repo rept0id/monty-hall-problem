@@ -22,11 +22,22 @@ Host Reveal,Player Change,Wins,Curtains,Games
 ```
 
 Optional Flags :
-| Flag | Description | Example |
-|--- |--- |--- |
-| "--log-no-header" | Prints log without a header. | "./main --log-no-header" |
-| "--curtains" (or "--c x") | Sets num of curtains Default is 3. | "./main --c 4". |
-| "--state-games" (or "--sg x") | Sets num of games per state. Default is 1000000. | "./main --sg 100000" |
+
+`--log-no-header`:
+- **Desc.**: Prints result without header.
+- **Ex.**: `./main --log-no-header`
+
+`--curtains <NUMBER>`
+- **Short**: `--c <NUMBER>`
+- **Desc.**: Changes how many curtains there are.
+- **Ex.**: `./main --curtains 4`, `./main --c 4`
+- **Default** : 3
+
+`--state-games <NUMBER>`
+- **Short**: `--sg <NUMBER>`
+- **Desc.**: Changes how many games (iterations/loops) per state (cases) there are.
+- **Ex.**: `./main --state-games 2000000`, `./main --sg 2000000`
+- **Default** : 1000000
 
 ## Special Statistical Cases
 
@@ -42,4 +53,4 @@ This differs from the classic game, where the host reveals one of the curtains, 
 
 ## Multiprocessing
 
-This implementation uses **OpenMP** to parallelize the "games" in the simulation, resulting in high performance.
+This implementation uses **OpenMP** to parallelize the "games" in the simulation, resulting in better performance.
