@@ -12,6 +12,8 @@ typedef struct {
     bool doHostReveal;
 
     int playerWinsCount;
+
+    int gamesCount;
 } State;
 
 typedef struct {

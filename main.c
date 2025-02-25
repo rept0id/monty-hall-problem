@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h> // malloc, free
+#include <assert.h>
 #include <stdbool.h>
-
 #include <time.h>
-#include <string.h>
 
 #include <omp.h>
+
+#include <string.h>
 
 #include "./model/main.c"
 
@@ -61,7 +62,7 @@ enum Flag getFlagType(const char* flag) {
     return FLAG_UNKNOWN;
 }
 
-void handleFlags(int argc, char* argv[]) {
+void readFlags(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) { // start from 1 to skip program name
         enum Flag flag = getFlagType(argv[i]);
 
@@ -161,11 +162,7 @@ void initRand() {
     srand(time(NULL));
 }
 
-void initStatesSimulation(Simulation* _simulation) {
-    _simulation->states = (State *)malloc(STATES * sizeof(State));
-
-    /*** * * ***/
-
+void populateSimulation(Simulation* _simulation) {
     for (int i = 0; i < STATES; i++) {
         switch (i) {
             case 0:
@@ -188,7 +185,7 @@ void initStatesSimulation(Simulation* _simulation) {
     }
 }
 
-void simulate(Simulation* _simulation) {
+void runSimulation(Simulation* _simulation) {
     #pragma omp parallel for
     for (int g=0;g<stateGames;g++) {
         for (int s=0;s<STATES;s++) {
@@ -201,7 +198,7 @@ void simulate(Simulation* _simulation) {
 
             if (_simulation->states[s].doHostReveal) {
                 // if curtains are 3, there is only one curtain to switch to,
-                //  as the other is either the winning or the player choosen
+                //  as the other is either the winning or the *PLAYER* choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
                 if (curtains == 3) {
@@ -246,8 +243,9 @@ void simulate(Simulation* _simulation) {
             }
 
             if (_simulation->states[s].doPlayerChange) {
+                // (again, kind of same logic)
                 // if curtains are 3, there is only one curtain to switch to,
-                //  as the other is either the winning or the host choosen
+                //  as the other is either the winning or the *HOST* choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
                 if (curtains == 3) {
@@ -301,53 +299,169 @@ void simulate(Simulation* _simulation) {
                 #pragma omp atomic
                 _simulation->states[s].playerWinsCount++;
             }
+
+            #pragma omp atomic
+            _simulation->states[s].gamesCount++;
         }
     }
 }
 
-void logSimulation(Simulation* _simulation) {
-    if (logHeader) {
-        printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
+char* logSimulation(Simulation* _simulation) {
+    size_t bufferSize;
+
+    char *buffer;
+
+    size_t bufferOffset;
+
+    /*** * * ***/
+
+    bufferSize = 1024;
+    buffer = (char *)malloc(bufferSize);
+    if (!buffer) {
+        fprintf(stderr, "Error: logSimulation : buffer : Memory allocation failed\n");
+        return NULL;
     }
 
     /*** * * ***/
 
-    for (int s=0;s<STATES;s++) {
-        printf(
-            "%d,%d,%d,%d,%d\n",
+    bufferOffset = 0;
 
+    /*** * * ***/
+
+    if (logHeader) {
+        bufferOffset += snprintf(
+            buffer + bufferOffset,
+            bufferSize - bufferOffset,
+            "Host Reveal,Player Change,Wins,Curtains,Games\n"
+        );
+    }
+
+    for (int s = 0; s < STATES; s++) {
+        if (bufferOffset >= bufferSize/2) {
+            int bufferSizeNew;
+
+            /*** * * ***/
+
+            bufferSizeNew = bufferSize * 2;
+
+            /*** * * ***/
+
+            buffer = (char *)realloc(buffer, bufferSizeNew);
+            if (!buffer) {
+                fprintf(stderr, "Error: logSimulation : buffer : Memory reallocation failed\n");
+                return NULL;
+            }
+
+            /*** * * ***/
+
+            bufferSize = bufferSizeNew;
+        }
+
+        /*** * * ***/
+
+        bufferOffset += snprintf(
+            buffer + bufferOffset,
+            bufferSize - bufferOffset,
+            "%d,%d,%d,%d,%d\n",
             _simulation->states[s].doHostReveal,
             _simulation->states[s].doPlayerChange,
             _simulation->states[s].playerWinsCount,
             curtains,
-            stateGames
+            _simulation->states[s].gamesCount
         );
     }
+
+    /*** * * ***/
+
+    return buffer;
+}
+
+/*** * * ***/
+
+void test() {
+    Simulation simulation;
+
+    const int curtainsOriginal = curtains;
+    const int stateGamesOriginal = stateGames;
+    const bool logHeaderOriginal = logHeader;
+
+    /*** * * ***/
+
+    simulation.states = (State *)calloc(STATES, sizeof(State));
+    assert(simulation.states != NULL);
+
+    /*** * * ***/
+
+    // readFlags
+    readFlags(6, (char*[]) { "program", "--c", "5", "--sg", "100", "--log-no-header" });
+    assert(curtains == 5); // Check if --c set curtains
+    assert(stateGames == 100); // Check if --sg set stateGames
+    assert(logHeader == false); // Check if --log-no-header set logHeader
+
+    // initRand
+    initRand();
+
+    // populateSimulation
+    populateSimulation(&simulation);
+    assert(simulation.states[0].doHostReveal == true);
+    assert(simulation.states[1].doHostReveal == true);
+    assert(simulation.states[1].doPlayerChange == true);
+    assert(simulation.states[3].doPlayerChange == true);
+
+    // runSimulation
+    runSimulation(&simulation);
+    for (int s=0;s<STATES;s++) {
+        assert(simulation.states[s].gamesCount == stateGames);
+    }
+
+    // logSimulation
+    assert(strlen(logSimulation(&simulation)) > 0);
+
+    /*** * * ***/
+
+    curtains = curtainsOriginal;
+    stateGames = stateGamesOriginal;
+    logHeader = logHeaderOriginal;
+
+    /*** * * ***/
+
+    free(simulation.states);
 }
 
 /*** * * ***/
 
 int main(int argc, char* argv[]) {
+    test();
+
+    /*** * * ***/
+
     Simulation simulation;
 
     /*** * * ***/
 
-    handleFlags(argc, argv);
+    simulation.states = (State *)calloc(STATES, sizeof(State));
+    if (!simulation.states) {
+        fprintf(stderr, "Error: main : simulation.states : Memory allocation failed\n");
+        return EXIT_FAILURE;
+    }
 
     /*** * * ***/
+
+    readFlags(argc, argv);
 
     initRand();
-    initStatesSimulation(&simulation);
 
-    /*** * * ***/
+    populateSimulation(&simulation);
 
-    simulate(&simulation);
+    runSimulation(&simulation);
 
-    /*** * * ***/
-
-    logSimulation(&simulation);
+    printf("%s",logSimulation(&simulation));
 
     /*** * * ***/
 
     free(simulation.states);
+
+    /*** * * ***/
+
+    return EXIT_SUCCESS;
 }
