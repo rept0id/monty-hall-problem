@@ -39,6 +39,8 @@ enum Flag getFlagType(const char* flag) {
         return NOT_FLAG;
     }
 
+    /*** * * ***/
+
     if (
         strcmp(flag, "--c") == 0
         ||
@@ -59,6 +61,8 @@ enum Flag getFlagType(const char* flag) {
         return FLAG_LOG_NO_HEADER;
     }
 
+    /*** * * ***/
+    
     return FLAG_UNKNOWN;
 }
 
@@ -72,6 +76,9 @@ void readFlags(int argc, char* argv[]) {
 
             case FLAG_UNKNOWN:
                 fprintf(stderr, "Warning: Unknown flag %s\n", argv[i]);
+
+                /*** * * ***/
+                
                 break;
 
             case FLAG_CURTAINS: {
@@ -82,6 +89,8 @@ void readFlags(int argc, char* argv[]) {
                 if (i+1 >= argc) {
                     fprintf(stderr, "Error: Missing argument for %s flag\n", argv[i]);
 
+                    /*** * * ***/
+                    
                     break;
                 }
 
@@ -95,12 +104,16 @@ void readFlags(int argc, char* argv[]) {
                 if (arg == 0) {
                     fprintf(stderr, "Error: Invalid argument for %s flag\n", argv[i]);
 
+                    /*** * * ***/
+                    
                     break;
                 }
 
                 if (arg < 0) {
                     fprintf(stderr, "Error: Invalid argument for %s flag: Negative\n", argv[i]);
 
+                    /*** * * ***/
+                    
                     break;
                 }
 
@@ -121,6 +134,8 @@ void readFlags(int argc, char* argv[]) {
                 if (i+1 >= argc) {
                     fprintf(stderr, "Error: Missing argument for %s flag\n", argv[i]);
 
+                    /*** * * ***/
+                    
                     break;
                 }
 
@@ -130,15 +145,20 @@ void readFlags(int argc, char* argv[]) {
                 i++;
 
                 /*** * * ***/
+                
                 if (arg == 0) {
                     fprintf(stderr, "Error: Invalid argument for %s flag\n", argv[i]);
 
+                    /*** * * ***/
+                    
                     break;
                 }
 
                 if (arg < 0) {
                     fprintf(stderr, "Error: Invalid argument for %s flag: Negative\n", argv[i]);
 
+                    /*** * * ***/
+                    
                     break;
                 }
 
@@ -153,6 +173,9 @@ void readFlags(int argc, char* argv[]) {
 
             case FLAG_LOG_NO_HEADER:
                 logHeader = false;
+
+                /*** * * ***/
+                
                 break;
         }
     }
@@ -168,18 +191,33 @@ void populateSimulation(Simulation* _simulation) {
             case 0:
                 _simulation->states[i].doHostReveal = true;
                 _simulation->states[i].doPlayerChange = false;
+
+                /*** * * ***/
+                
                 break;
+            
             case 1:
                 _simulation->states[i].doHostReveal = true;
                 _simulation->states[i].doPlayerChange = true;
+
+                /*** * * ***/
+                
                 break;
+            
             case 2:
                 _simulation->states[i].doHostReveal = false;
                 _simulation->states[i].doPlayerChange = false;
+
+                /*** * * ***/
+                
                 break;
+            
             case 3:
                 _simulation->states[i].doHostReveal = false;
                 _simulation->states[i].doPlayerChange = true;
+
+                /*** * * ***/
+                
                 break;
         }
     }
@@ -214,6 +252,9 @@ void runSimulation(Simulation* _simulation) {
                         /*** * * ***/
 
                         game.hostCurtainIdx = i;
+
+                        /*** * * ***/
+                        
                         break;
                     }
                 } else {
@@ -237,6 +278,9 @@ void runSimulation(Simulation* _simulation) {
                         /*** * * ***/
 
                         game.hostCurtainIdx = n;
+
+                        /*** * * ***/
+                        
                         break;
                     }
                 }
@@ -263,6 +307,9 @@ void runSimulation(Simulation* _simulation) {
                         /*** * * ***/
 
                         game.playerCurtainIdx = i;
+
+                        /*** * * ***/
+                        
                         break;
                     }
                 } else {
@@ -288,6 +335,9 @@ void runSimulation(Simulation* _simulation) {
                         /*** * * ***/
 
                         game.playerCurtainIdx = n;
+
+                        /*** * * ***/
+                        
                         break;
                     }
                 }
@@ -319,6 +369,9 @@ char* logSimulation(Simulation* _simulation) {
     buffer = (char *)malloc(bufferSize);
     if (!buffer) {
         fprintf(stderr, "Error: logSimulation : buffer : Memory allocation failed\n");
+
+        /*** * * ***/
+        
         return NULL;
     }
 
@@ -349,6 +402,9 @@ char* logSimulation(Simulation* _simulation) {
             buffer = (char *)realloc(buffer, bufferSizeNew);
             if (!buffer) {
                 fprintf(stderr, "Error: logSimulation : buffer : Memory reallocation failed\n");
+
+                /*** * * ***/
+                
                 return NULL;
             }
 
@@ -379,11 +435,13 @@ char* logSimulation(Simulation* _simulation) {
 /*** * * ***/
 
 void test() {
-    Simulation simulation;
-
     const int curtainsOriginal = curtains;
     const int stateGamesOriginal = stateGames;
     const bool logHeaderOriginal = logHeader;
+
+    /*** * * ***/
+    
+    Simulation simulation;
 
     /*** * * ***/
 
@@ -401,20 +459,22 @@ void test() {
     // initRand
     initRand();
 
-    // populateSimulation
+    // simulation
+    
+    // simulation : populate
     populateSimulation(&simulation);
     assert(simulation.states[0].doHostReveal == true);
     assert(simulation.states[1].doHostReveal == true);
     assert(simulation.states[1].doPlayerChange == true);
     assert(simulation.states[3].doPlayerChange == true);
 
-    // runSimulation
+    // simulation : run
     runSimulation(&simulation);
     for (int s=0;s<STATES;s++) {
         assert(simulation.states[s].gamesCount == stateGames);
     }
 
-    // logSimulation
+    // simulation : log
     assert(strlen(logSimulation(&simulation)) > 0);
 
     /*** * * ***/
