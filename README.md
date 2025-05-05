@@ -4,7 +4,8 @@
 
 ## Build
 
-```gcc -O3 -fopenmp ./main.c -o main
+```
+gcc -O3 -fopenmp ./main.c -o main
 ```
 
 ## Run
