@@ -39,6 +39,10 @@ Optional Flags :
 - **Ex.**: `./main --state-games 2000000`, `./main --sg 2000000`
 - **Default** : 1000000
 
+## Memory-safety
+
+This program tries to provide memory-safety, even written in C, by using fixed-size stack arrays - at least for the simulation part. Reporting of the result still uses dynamic memory for output buffering, which is something planned to be improved.
+
 ## Special Statistical Cases
 
 Apart from the classic cases, this implementation also includes two additional cases:
