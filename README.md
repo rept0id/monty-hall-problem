@@ -14,6 +14,12 @@ make build
 make run
 ```
 
+or
+
+```
+./main
+```
+
 Example Result :
 ```
 Host Reveal,Player Change,Wins,Curtains,Games
