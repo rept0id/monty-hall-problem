@@ -5,13 +5,13 @@
 ## Build
 
 ```
-gcc -O3 -fopenmp ./main.c -o main
+make build
 ```
 
 ## Run
 
 ```
-> ./main
+make run
 ```
 
 Example Result :
