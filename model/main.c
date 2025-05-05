@@ -1,5 +1,7 @@
 #include <stdbool.h>
 
+#include "./constants.c"
+
 typedef struct {
     int winCurtainIdx;
 
@@ -17,5 +19,5 @@ typedef struct {
 } State;
 
 typedef struct {
-    State* states;
+    State states[CONST_STATES_MAX_IDX+1];
 } Simulation;

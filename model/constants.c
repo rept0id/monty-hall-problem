@@ -1,0 +1,1 @@
+#define CONST_STATES_MAX_IDX 3

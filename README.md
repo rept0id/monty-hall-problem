@@ -1,6 +1,6 @@
 # monty-hall-problem
 
-![](./doc/assets/img/header1-1737454378.png)
+![](./doc/assets/img/header1-D05M05Y25.png)
 
 ## Build
 
