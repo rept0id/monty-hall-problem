@@ -11,8 +11,8 @@
 /*** * * ***/
 
 void utilSetOptionsDefault(Options *_options) {
-    _options->stateGames = CONST_DEF_OPTIONS_STATE_GAMES;
-    _options->curtains = CONST_DEF_OPTIONS_CURTAINS;
+    _options->stateGamesMaxIdx = CONST_DEF_OPTIONS_STATE_GAMES_MAX_IDX;
+    _options->curtainsMaxIdx = CONST_DEF_OPTIONS_CURTAINS_MAX_IDX;
     _options->logHeader = CONST_DEF_OPTIONS_LOG_HEADER;
 }
 
@@ -103,7 +103,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                _options->curtains = arg;
+                _options->curtainsMaxIdx = arg-1;
 
                 /*** * * ***/
 
@@ -148,7 +148,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                _options->stateGames = arg;
+                _options->stateGamesMaxIdx = arg-1;
 
                 /*** * * ***/
 

@@ -6,8 +6,8 @@
 /*** * * ***/
 
 typedef struct {
-    int stateGames;
-    int curtains;
+    int stateGamesMaxIdx;
+    int curtainsMaxIdx;
     bool logHeader;
 } Options;
 
