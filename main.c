@@ -58,14 +58,16 @@ enum EnumFlagType getFlagType(const char* flag) {
 
 void readFlags(int argc, char* argv[], Options *_options) {
     for (int i = 1; i < argc; i++) { // start from 1 to skip program name
-        enum EnumFlagType flag = getFlagType(argv[i]);
+        enum EnumFlagType flagType;
 
-        switch (flag) {
+        flagType = getFlagType(argv[i]);
+
+        switch (flagType) {
             case FLAG_TYPE_NOT_FLAG:
                 break;
 
             case FLAG_TYPE_UNKNOWN:
-                fprintf(stderr, "Warning: Unknown flag %s\n", argv[i]);
+                fprintf(stderr, "Error: Unknown flag %s\n", argv[i]);
 
                 /*** * * ***/
 
