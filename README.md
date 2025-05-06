@@ -4,21 +4,29 @@
 
 ## Build
 
-```gcc main.c -o main```
+```
+make build
+```
 
 ## Run
 
 ```
-> ./main
+make run
+```
+
+or
+
+```
+./main
 ```
 
 Example Result :
 ```
 Host Reveal,Player Change,Wins,Curtains,Games
-1,0,333605,3,1000000
-1,1,388620,3,1000000
-0,0,332905,3,1000000
-0,1,333228,3,1000000
+1,0,333455,3,1000000
+1,1,666545,3,1000000
+0,0,333456,3,1000000
+0,1,333082,3,1000000
 ```
 
 Optional Flags :
@@ -38,6 +46,10 @@ Optional Flags :
 - **Desc.**: Changes how many games (iterations/loops) per state (cases) there are.
 - **Ex.**: `./main --state-games 2000000`, `./main --sg 2000000`
 - **Default** : 1000000
+
+## Memory-safety
+
+This program tries to provide memory-safety, even written in C, by using fixed-size stack arrays - at least for the simulation part. Reporting of the result still uses dynamic memory for output buffering, which is something planned to be improved.
 
 ## Special Statistical Cases
 
