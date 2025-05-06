@@ -1,6 +1,6 @@
 # monty-hall-problem
 
-![](./doc/assets/img/header1-D05M05Y25.png)
+![](./doc/assets/img/header1-D06M05Y25.png)
 
 A simulation of the Monty Hall Problem.
 
@@ -21,7 +21,7 @@ Savant's response was that the contestant should switch to the other door.
 
 [...]
 
-When the player first makes their choice, there is a ⁠2/3⁠ chance that the car is behind one of the doors not chosen. This probability does not change after the host reveals a goat behind one of the unchosen doors. When the host provides information about the two unchosen doors (revealing that one of them does not have the car behind it), the ⁠2/3⁠ chance of the car being behind one of the unchosen doors rests on the unchosen and unrevealed door, as opposed to the ⁠1/3⁠ chance of the car being behind the door the contestant chose initially. 
+When the player first makes their choice, there is a ⁠2/3⁠ chance that the car is behind one of the doors not chosen. This probability does not change after the host reveals a goat behind one of the unchosen doors. When the host provides information about the two unchosen doors (revealing that one of them does not have the car behind it), the ⁠2/3⁠ chance of the car being behind one of the unchosen doors rests on the unchosen and unrevealed door, as opposed to the ⁠1/3⁠ chance of the car being behind the door the contestant chose initially.
 
 [...]
 
@@ -49,10 +49,10 @@ or
 Example Result :
 ```
 Host Reveal,Player Change,Wins,Curtains,Games
+0,0,333455,3,1000000
 1,0,333455,3,1000000
-1,1,666545,3,1000000
-0,0,333456,3,1000000
-0,1,333082,3,1000000
+0,1,333083,3,1000000
+1,1,666544,3,1000000
 ```
 
 Optional Flags :
