@@ -2,7 +2,6 @@
 #include <stdlib.h> // malloc, free
 #include <assert.h>
 #include <stdbool.h>
-#include <time.h>
 
 #include <omp.h>
 
