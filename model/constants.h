@@ -1,0 +1,6 @@
+#ifndef MODEL_CONSTANTS_H
+#define MODEL_CONSTANTS_H
+
+#define CONST_STATES_MAX_IDX 3
+
+#endif

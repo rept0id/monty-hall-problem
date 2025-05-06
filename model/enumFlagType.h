@@ -1,3 +1,6 @@
+#ifndef MODEL_ENUM_FLAG_TYPE_H
+#define MODEL_ENUM_FLAG_TYPE_H
+
 enum EnumFlagType {
     FLAG_TYPE_NOT_FLAG,
     FLAG_TYPE_UNKNOWN,
@@ -5,3 +8,5 @@ enum EnumFlagType {
     FLAG_TYPE_STATE_GAMES,
     FLAG_TYPE_LOG_NO_HEADER
 };
+
+#endif

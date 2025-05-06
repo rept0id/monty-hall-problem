@@ -1,6 +1,11 @@
+#ifndef MODEL_SIMULATION_H
+#define MODEL_SIMULATION_H
+
+/*** * * ***/
+
 #include <stdbool.h>
 
-#include "./constants.c"
+#include "./constants.h"
 
 /*** * * ***/
 
@@ -23,3 +28,7 @@ typedef struct {
 typedef struct {
     State states[CONST_STATES_MAX_IDX+1];
 } Simulation;
+
+/*** * * ***/
+
+#endif

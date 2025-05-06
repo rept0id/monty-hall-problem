@@ -1,8 +1,8 @@
 build:
-	gcc -O3 -fopenmp ./main.c -o main
+	gcc -O3 -fopenmp controller/*.c ./main.c -o monty-hall-problem
 
 run:
-	./main
+	./monty-hall-problem
 
 time:
-	time ./main
+	time ./monty-hall-problem
