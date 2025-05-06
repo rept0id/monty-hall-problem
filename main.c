@@ -3,29 +3,26 @@
 #include <assert.h>
 #include <stdbool.h>
 
+#include <string.h>
+
 #include <omp.h>
 
 #include <stdint.h>
 
-#include <string.h>
-
-#include "./model/main.c"
+#include "./model/constants.c"
+#include "./model/defaults.c"
+#include "./model/options.c"
+#include "./model/simulation.c"
 #include "./model/enumFlagType.c"
 #include "./model/enumStateType.c"
 
 /*** * * ***/
 
-#define DEF_STATE_GAMES 1000000
-#define DEF_CURTAINS 3
-#define DEF_LOG_HEADER true
-
-/*** * * ***/
-
-int stateGames = DEF_STATE_GAMES;
-int curtains = DEF_CURTAINS;
-bool logHeader = DEF_LOG_HEADER;
-
-/*** * * ***/
+void setOptionsDefault(Options *_options) {
+    _options->stateGames = DEF_OPTIONS_STATE_GAMES;
+    _options->curtains = DEF_OPTIONS_CURTAINS;
+    _options->logHeader = DEF_OPTIONS_LOG_HEADER;
+}
 
 enum EnumFlagType getFlagType(const char* flag) {
     if (flag[0] != '-') {
@@ -59,7 +56,7 @@ enum EnumFlagType getFlagType(const char* flag) {
     return FLAG_TYPE_UNKNOWN;
 }
 
-void readFlags(int argc, char* argv[]) {
+void readFlags(int argc, char* argv[], Options *_options) {
     for (int i = 1; i < argc; i++) { // start from 1 to skip program name
         enum EnumFlagType flag = getFlagType(argv[i]);
 
@@ -112,7 +109,7 @@ void readFlags(int argc, char* argv[]) {
 
                 /*** * * ***/
 
-                curtains = arg;
+                _options->curtains = arg;
 
                 /*** * * ***/
 
@@ -157,7 +154,7 @@ void readFlags(int argc, char* argv[]) {
 
                 /*** * * ***/
 
-                stateGames = arg;
+                _options->stateGames = arg;
 
                 /*** * * ***/
 
@@ -165,7 +162,7 @@ void readFlags(int argc, char* argv[]) {
             }
 
             case FLAG_TYPE_LOG_NO_HEADER:
-                logHeader = false;
+                _options->logHeader = false;
 
                 /*** * * ***/
 
@@ -177,7 +174,7 @@ void readFlags(int argc, char* argv[]) {
 void populateSimulation(Simulation* _simulation) {
     for (int i = 0; i <= CONST_STATES_MAX_IDX; i++) {
         switch (i) {
-            case STATE_TYPE_NORMAL:
+            case STATE_TYPE_NOTHING:
                 _simulation->states[i].doHostReveal = false;
                 _simulation->states[i].doPlayerChange = false;
 
@@ -220,7 +217,7 @@ void populateSimulation(Simulation* _simulation) {
     }
 }
 
-void runSimulation(Simulation* _simulation) {
+void runSimulation(Simulation* _simulation, Options *_options) {
     for (int s=0;s<=CONST_STATES_MAX_IDX;s++) {
         int sPlayerWinsCount;
         int sGamesCount;
@@ -233,7 +230,7 @@ void runSimulation(Simulation* _simulation) {
         /*** * * ***/
 
         #pragma omp parallel for reduction(+:sPlayerWinsCount, sGamesCount) // parallelizing the inner-most loop
-        for (int g=0;g<stateGames;g++) {
+        for (int g=0;g<_options->stateGames;g++) {
             Game game;
 
             unsigned int gWinCurtainIdxSeed;
@@ -246,8 +243,8 @@ void runSimulation(Simulation* _simulation) {
             gPlayerCurtainIdxSeed = (unsigned int)((s + g) * 104729);
             gHostCurtainIdxSeed = (unsigned int)((s + g) * 1299709);
 
-            game.winCurtainIdx = rand_r(&gWinCurtainIdxSeed) % curtains;
-            game.playerCurtainIdx = rand_r(&gPlayerCurtainIdxSeed) % curtains;
+            game.winCurtainIdx = rand_r(&gWinCurtainIdxSeed) % _options->curtains;
+            game.playerCurtainIdx = rand_r(&gPlayerCurtainIdxSeed) % _options->curtains;
 
             /*** * * ***/
 
@@ -256,7 +253,7 @@ void runSimulation(Simulation* _simulation) {
                 //  as the other is either the winning or the *PLAYER* choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if (curtains == 3) {
+                if (_options->curtains == 3) {
                     for (int i=0;i<3;i++) {
                         if (i == game.winCurtainIdx) {
                             continue;
@@ -275,12 +272,12 @@ void runSimulation(Simulation* _simulation) {
                         break;
                     }
                 } else {
-                    while(1) {
+                    while(true) {
                         int n;
 
                         /*** * * ***/
 
-                        n = rand_r(&gHostCurtainIdxSeed) % curtains;
+                        n = rand_r(&gHostCurtainIdxSeed) % _options->curtains;
 
                         /*** * * ***/
 
@@ -309,7 +306,7 @@ void runSimulation(Simulation* _simulation) {
                 //  as the other is either the winning or the *HOST* choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if (curtains == 3) {
+                if (_options->curtains == 3) {
                     for (int i=0;i<3;i++) {
                         if (i == game.playerCurtainIdx) {
                             continue;
@@ -330,12 +327,12 @@ void runSimulation(Simulation* _simulation) {
                         break;
                     }
                 } else {
-                    while(1) {
+                    while(true) {
                         int n;
 
                         /*** * * ***/
 
-                        n = rand_r(&gPlayerCurtainIdxSeed) % curtains;
+                        n = rand_r(&gPlayerCurtainIdxSeed) % _options->curtains;
 
                         /*** * * ***/
 
@@ -369,16 +366,20 @@ void runSimulation(Simulation* _simulation) {
             sGamesCount++;
         }
 
+        /*** * * ***/
+
         _simulation->states[s].playerWinsCount = sPlayerWinsCount;
         _simulation->states[s].gamesCount = sGamesCount;
     }
 }
 
-void logSimulation(Simulation* _simulation) {
-    if (logHeader) {
+void logSimulation(Simulation* _simulation, Options *_options) {
+    // header
+    if (_options->logHeader) {
         printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
     }
 
+    // data
     for (int s = 0; s <= CONST_STATES_MAX_IDX; s++) {
         printf(
             "%d,%d,%d,%d,%d\n",
@@ -386,7 +387,7 @@ void logSimulation(Simulation* _simulation) {
             _simulation->states[s].doHostReveal,
             _simulation->states[s].doPlayerChange,
             _simulation->states[s].playerWinsCount,
-            curtains,
+            _options->curtains,
             _simulation->states[s].gamesCount
         );
     }
@@ -395,78 +396,91 @@ void logSimulation(Simulation* _simulation) {
 /*** * * ***/
 
 void test() {
-    const int curtainsOriginal = curtains;
-    const int stateGamesOriginal = stateGames;
-    const bool logHeaderOriginal = logHeader;
+    // options
+    Options options = {0};
 
-    /*** * * ***/
-
-    Simulation simulation;
+    // simulation
+    Simulation simulation = {0};
 
     /*** * * ***/
 
     // readFlags
-
-    readFlags(6, (char*[]) { "program", "--c", "5", "--sg", "100", "--log-no-header" });
-
-    assert(curtains == 5); // Check if --c set curtains
-    assert(stateGames == 100); // Check if --sg set stateGames
-    assert(logHeader == false); // Check if --log-no-header set logHeader
+    readFlags(
+        6, // argc
+        (char*[]) {
+            "program",
+            "--c", "5",
+            "--sg", "100",
+            "--log-no-header"
+        }, // argv
+        &options // _options
+    );
+    // readFlags : assert : curtains
+    assert(options.curtains == 5);
+    // readFlags : assert : stateGames
+    assert(options.stateGames == 100);
+    // readFlags : assert : logHeader
+    assert(options.logHeader == false);
 
     // simulation
 
     // simulation : populate
-
     populateSimulation(&simulation);
-
-    assert(simulation.states[STATE_TYPE_NORMAL].doHostReveal == false);
-    assert(simulation.states[STATE_TYPE_NORMAL].doPlayerChange == false);
-
+    // simulation : populate : STATE_TYPE_NOTHING
+    assert(simulation.states[STATE_TYPE_NOTHING].doHostReveal == false);
+    assert(simulation.states[STATE_TYPE_NOTHING].doPlayerChange == false);
+    // simulation : populate : STATE_TYPE_DO_HOST_REVEAL
     assert(simulation.states[STATE_TYPE_DO_HOST_REVEAL].doHostReveal == true);
     assert(simulation.states[STATE_TYPE_DO_HOST_REVEAL].doPlayerChange == false);
-
+    // simulation : populate : STATE_TYPE_DO_HOST_REVEAL_DO_PLAYER_SWITCH
     assert(simulation.states[STATE_TYPE_DO_HOST_REVEAL_DO_PLAYER_SWITCH].doHostReveal == true);
     assert(simulation.states[STATE_TYPE_DO_HOST_REVEAL_DO_PLAYER_SWITCH].doPlayerChange == true);
-
+    // simulation : populate : STATE_TYPE_DO_PLAYER_CHANGE
     assert(simulation.states[STATE_TYPE_DO_PLAYER_CHANGE].doHostReveal == false);
     assert(simulation.states[STATE_TYPE_DO_PLAYER_CHANGE].doPlayerChange == true);
 
     // simulation : run
-
-    runSimulation(&simulation);
-
+    runSimulation(&simulation, &options);
+    // simulation : run : assert
     for (int s=0;s<=CONST_STATES_MAX_IDX;s++) {
-        assert(simulation.states[s].gamesCount == stateGames);
-
+        // simulation : run : assert : gamesCount
+        assert(simulation.states[s].gamesCount == options.stateGames);
+        // simulation : run : assert : playerWinsCount
         assert(simulation.states[s].playerWinsCount > 0);
-        assert(simulation.states[s].playerWinsCount < stateGames);
+        assert(simulation.states[s].playerWinsCount < options.stateGames);
     }
-
-    /*** * * ***/
-
-    curtains = curtainsOriginal;
-    stateGames = stateGamesOriginal;
-    logHeader = logHeaderOriginal;
 }
 
 /*** * * ***/
 
 int main(int argc, char* argv[]) {
+    // test
     test();
 
     /*** * * ***/
 
+    // options
+    Options options = {0};
+
+    // simulation
     Simulation simulation = {0};
 
     /*** * * ***/
 
-    readFlags(argc, argv);
+    // options
+    // options : default
+    setOptionsDefault(&options);
 
+    // flags
+    readFlags(argc, argv, &options);
+
+    // simulation
+    // simulation : populate
     populateSimulation(&simulation);
-
-    runSimulation(&simulation);
-
-    logSimulation(&simulation);
+    // simulation : run
+    runSimulation(&simulation, &options);
+    // simulation : log
+    logSimulation(&simulation, &options);
 
     /*** * * ***/
 

@@ -2,6 +2,8 @@
 
 #include "./constants.c"
 
+/*** * * ***/
+
 typedef struct {
     int winCurtainIdx;
 
