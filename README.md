@@ -80,14 +80,21 @@ This program, even written in C, tries to provide memory-safety, by using fixed-
 ## Special Statistical Cases
 
 Apart from the classic cases, this implementation also includes two additional cases:
-- The host doesn't reveal any curtain, and the player keeps their chosen curtain. (Host Reveal=0,Player Change=0)
-- The host doesn't reveal any curtain, and the player switches to the other curtain. (Host Reveal=0,Player Change=1)
+- The host doesn't reveal any curtain, and the player keeps the chosen curtain.
+  
+  (Host Reveal=0,Player Change=0)
+  
+- The host doesn't reveal any curtain, and the player changes to the other curtain.
+
+  (Host Reveal=0,Player Change=1)
 
 What is common in both cases is that the host doesn't reveal any curtain.
 
-The result of this, when you run the simulation, is that **if the host doesn't reveal a curtain, the player's chances of winning remain the same whether they change curtains or not**.
+The outcome of this, when you run the simulation, is that **if the host doesn't reveal a curtain, the player's chances of winning remain the same, changing the curtain or not**.
 
-This differs from the classic game, where the host reveals one of the curtains, and if the player switches curtains, the player's chances of winning are higher.
+This differs from the classic game, where the host reveals one of the curtains, and if the player changes curtain the chances of winning are higher.
+
+The purpose of all this, is to evaluate that it's the host that by revealing one of the curtains, allows the player to change the propabilities of winning from 1/3 to 2/3 by changing.
 
 ## Multiprocessing
 
