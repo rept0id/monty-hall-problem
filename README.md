@@ -17,7 +17,7 @@ make run
 or
 
 ```
-./main
+./monty-hall-problem
 ```
 
 Example Result :
@@ -33,18 +33,18 @@ Optional Flags :
 
 `--log-no-header`:
 - **Desc.**: Prints result without header.
-- **Ex.**: `./main --log-no-header`
+- **Ex.**: `./monty-hall-problem --log-no-header`
 
 `--curtains <NUMBER>`
 - **Short**: `--c <NUMBER>`
 - **Desc.**: Changes how many curtains there are.
-- **Ex.**: `./main --curtains 4`, `./main --c 4`
+- **Ex.**: `./monty-hall-problem --curtains 4`, `./monty-hall-problem --c 4`
 - **Default** : 3
 
 `--state-games <NUMBER>`
 - **Short**: `--sg <NUMBER>`
 - **Desc.**: Changes how many games (iterations/loops) per state (cases) there are.
-- **Ex.**: `./main --state-games 2000000`, `./main --sg 2000000`
+- **Ex.**: `./monty-hall-problem --state-games 2000000`, `./monty-hall-problem --sg 2000000`
 - **Default** : 1000000
 
 ## Memory-safety
