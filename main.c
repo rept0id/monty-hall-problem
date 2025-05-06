@@ -376,67 +376,12 @@ void runSimulation(Simulation* _simulation) {
 }
 
 char* logSimulation(Simulation* _simulation) {
-    size_t bufferSize;
-
-    char *buffer;
-
-    size_t bufferOffset;
-
-    /*** * * ***/
-
-    bufferSize = 1024;
-    buffer = (char *)malloc(bufferSize);
-    if (!buffer) {
-        fprintf(stderr, "Error: logSimulation : buffer : Memory allocation failed\n");
-
-        /*** * * ***/
-
-        return NULL;
-    }
-
-    /*** * * ***/
-
-    bufferOffset = 0;
-
-    /*** * * ***/
-
     if (logHeader) {
-        bufferOffset += snprintf(
-            buffer + bufferOffset,
-            bufferSize - bufferOffset,
-            "Host Reveal,Player Change,Wins,Curtains,Games\n"
-        );
+        printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
     }
 
     for (int s = 0; s <= CONST_STATES_MAX_IDX; s++) {
-        if (bufferOffset >= bufferSize/2) {
-            int bufferSizeNew;
-
-            /*** * * ***/
-
-            bufferSizeNew = bufferSize * 2;
-
-            /*** * * ***/
-
-            buffer = (char *)realloc(buffer, bufferSizeNew);
-            if (!buffer) {
-                fprintf(stderr, "Error: logSimulation : buffer : Memory reallocation failed\n");
-
-                /*** * * ***/
-
-                return NULL;
-            }
-
-            /*** * * ***/
-
-            bufferSize = bufferSizeNew;
-        }
-
-        /*** * * ***/
-
-        bufferOffset += snprintf(
-            buffer + bufferOffset,
-            bufferSize - bufferOffset,
+        printf(
             "%d,%d,%d,%d,%d\n",
             _simulation->states[s].doHostReveal,
             _simulation->states[s].doPlayerChange,
@@ -445,10 +390,6 @@ char* logSimulation(Simulation* _simulation) {
             _simulation->states[s].gamesCount
         );
     }
-
-    /*** * * ***/
-
-    return buffer;
 }
 
 /*** * * ***/
@@ -496,10 +437,10 @@ void test() {
 
     for (int s=0;s<=CONST_STATES_MAX_IDX;s++) {
         assert(simulation.states[s].gamesCount == stateGames);
-    }
 
-    // simulation : log
-    assert(strlen(logSimulation(&simulation)) > 0);
+        assert(simulation.states[s].playerWinsCount > 0);
+        assert(simulation.states[s].playerWinsCount < stateGames);
+    }
 
     /*** * * ***/
 
@@ -525,7 +466,7 @@ int main(int argc, char* argv[]) {
 
     runSimulation(&simulation);
 
-    printf("%s",logSimulation(&simulation));
+    logSimulation(&simulation);
 
     /*** * * ***/
 
