@@ -77,25 +77,27 @@ Optional Flags :
 
 This program, even written in C, tries to provide memory-safety, by using fixed-size stack arrays.
 
-## Special Statistical Cases
-
-Apart from the classic cases, this implementation also includes two additional cases:
-- The host doesn't reveal any curtain, and the player keeps the chosen curtain.
-  
-  (Host Reveal=0,Player Change=0)
-  
-- The host doesn't reveal any curtain, and the player changes to the other curtain.
-
-  (Host Reveal=0,Player Change=1)
-
-What is common in both cases is that the host doesn't reveal any curtain.
-
-The outcome of this, when you run the simulation, is that **if the host doesn't reveal a curtain, the player's chances of winning remain the same, changing the curtain or not**.
-
-This differs from the classic game, where the host reveals one of the curtains, and if the player changes curtain the chances of winning are higher.
-
-The purpose of all this, is to evaluate that it's the host that by revealing one of the curtains, allows the player to change the propabilities of winning from 1/3 to 2/3 by changing.
-
 ## Multiprocessing
 
 This implementation uses **OpenMP** to parallelize the "games" in the simulation.
+
+## Special Statistical Cases and Analysis of the Game
+
+In the classic game, the player is asked about changing or not the picked curtain, right after the host reveals one of the curtains that doesn't have any prize.
+
+In this implementation, there are two more cases, where the player changes or not the curtain, but the host doesn't reveal any curtain.
+
+- Host doesn't reveal, player changes curtain
+- Host doesn't revela, player doesn't change curtain
+
+What the theory says is that, in the classic game, it's the host that enables the player to change his propabilities of winning. 
+
+ - First, the player chooses one of the curtains => Propabilities of winning : 1/3
+ - Then the host reveals one of the curtains without the prize
+ - Now, the player knows one of the curtains that doesn't have the prize.
+    - If the player changes the curtain, it's literally... a new game, where, the propabilities become 2/3. The new action, includes the knowledge on one of the curtains.
+    - If not, the propabilites are as before, 1/3.
+
+Turns out, by running the simulation, that if the host wouldn't reveal one of the curtains, the player changing curtain wouldn't have any impact.
+
+The purpose of those two extra cases, is to prove the theoretical analysis above, that it's the host revealing one of the curtains that allows the player to enter a... new game with better chances of winning.
