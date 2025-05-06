@@ -49,7 +49,7 @@ Optional Flags :
 
 ## Memory-safety
 
-This program tries to provide memory-safety, even written in C, by using fixed-size stack arrays - at least for the simulation part. Reporting of the result still uses dynamic memory for output buffering, which is something planned to be improved.
+This program, even written in C, tries to provide memory-safety, by using fixed-size stack arrays.
 
 ## Special Statistical Cases
 

@@ -375,7 +375,7 @@ void runSimulation(Simulation* _simulation) {
     }
 }
 
-char* logSimulation(Simulation* _simulation) {
+void logSimulation(Simulation* _simulation) {
     if (logHeader) {
         printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
     }
@@ -383,6 +383,7 @@ char* logSimulation(Simulation* _simulation) {
     for (int s = 0; s <= CONST_STATES_MAX_IDX; s++) {
         printf(
             "%d,%d,%d,%d,%d\n",
+
             _simulation->states[s].doHostReveal,
             _simulation->states[s].doPlayerChange,
             _simulation->states[s].playerWinsCount,
