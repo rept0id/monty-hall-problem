@@ -2,7 +2,6 @@
 
 /*** * * ***/
 
-#include <stdio.h>
 #include <stdbool.h>
 
 #include <omp.h>
@@ -226,25 +225,5 @@ void runSimulation(Simulation* _simulation, Options *_options) {
         // _simulation
         _simulation->states[s].playerWinsCount = simulationPlayerWinsCount;
         _simulation->states[s].gamesCount = simulationGamesCount;
-    }
-}
-
-void logSimulation(Simulation* _simulation, Options *_options) {
-    // header
-    if (_options->logHeader) {
-        printf("Host Reveal,Player Change,Wins,Curtains,Games\n");
-    }
-
-    // data
-    for (int s = 0; s < CONST_STATES_SIZE; s++) {
-        printf(
-            "%d,%d,%d,%d,%d\n",
-
-            _simulation->states[s].doHostReveal,
-            _simulation->states[s].doPlayerChange,
-            _simulation->states[s].playerWinsCount,
-            _options->curtainsSize,
-            _simulation->states[s].gamesCount
-        );
     }
 }

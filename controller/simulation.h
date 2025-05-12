@@ -6,6 +6,5 @@
 
 void populateSimulation(Simulation* _simulation);
 void runSimulation(Simulation* _simulation, Options* _options);
-void logSimulation(Simulation* _simulation, Options* _options);
 
 #endif

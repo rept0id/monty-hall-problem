@@ -13,6 +13,7 @@
 // simulation
 #include "./model/simulation.h"
 #include "./controller/simulation.h"
+#include "./view/simulation.h"
 
 /*** * * ***/
 
