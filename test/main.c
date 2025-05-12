@@ -34,9 +34,9 @@ void test() {
         &options // _options
     );
     // readFlags : assert : curtains
-    assert(options.curtainsMaxIdx+1 == 5);
+    assert(options.curtainsSize == 5);
     // readFlags : assert : stateGames
-    assert(options.stateGamesMaxIdx+1 == 100);
+    assert(options.stateGamesSize == 100);
     // readFlags : assert : logHeader
     assert(options.logHeader == false);
 
@@ -60,11 +60,11 @@ void test() {
     // simulation : run
     runSimulation(&simulation, &options);
     // simulation : run : assert
-    for (int s = 0; s <= CONST_STATES_MAX_IDX; s++) {
+    for (int s = 0; s < CONST_STATES_SIZE; s++) {
         // simulation : run : assert : gamesCount
-        assert(simulation.states[s].gamesCount == options.stateGamesMaxIdx+1);
+        assert(simulation.states[s].gamesCount == options.stateGamesSize);
         // simulation : run : assert : playerWinsCount
         assert(simulation.states[s].playerWinsCount > 0);
-        assert(simulation.states[s].playerWinsCount < options.stateGamesMaxIdx+1);
+        assert(simulation.states[s].playerWinsCount < options.stateGamesSize);
     }
 }

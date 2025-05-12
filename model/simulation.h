@@ -26,7 +26,7 @@ typedef struct {
 } State;
 
 typedef struct {
-    State states[CONST_STATES_MAX_IDX+1];
+    State states[CONST_STATES_SIZE];
 } Simulation;
 
 /*** * * ***/

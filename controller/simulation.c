@@ -17,7 +17,7 @@
 /*** * * ***/
 
 void populateSimulation(Simulation* _simulation) {
-    for (int i = 0; i <= CONST_STATES_MAX_IDX; i++) {
+    for (int i = 0; i < CONST_STATES_SIZE; i++) {
         switch (i) {
             case STATE_TYPE_NOTHING:
                 _simulation->states[i].doHostReveal = false;
@@ -63,7 +63,7 @@ void populateSimulation(Simulation* _simulation) {
 }
 
 void runSimulation(Simulation* _simulation, Options *_options) {
-    for (int s=0; s <= CONST_STATES_MAX_IDX; s++) {
+    for (int s=0; s < CONST_STATES_SIZE; s++) {
         // simulation
         int simulationPlayerWinsCount;
         int simulationGamesCount;
@@ -77,7 +77,7 @@ void runSimulation(Simulation* _simulation, Options *_options) {
         /*** * * ***/
 
         #pragma omp parallel for reduction(+:simulationPlayerWinsCount, simulationGamesCount) // parallelizing the inner-most loop
-        for (int g = 0; g <= _options->stateGamesMaxIdx; g++) {
+        for (int g = 0; g < _options->stateGamesSize; g++) {
             // seeds
             unsigned int seedWin;
             unsigned int seedPlayer;
@@ -94,8 +94,8 @@ void runSimulation(Simulation* _simulation, Options *_options) {
             seedHost = (unsigned int)((s + g) * 1299709);
 
             // game (based on : seeds)
-            game.winCurtainIdx = rand_r(&seedWin) % (_options->curtainsMaxIdx + 1);
-            game.playerCurtainIdx = rand_r(&seedPlayer) % (_options->curtainsMaxIdx + 1);
+            game.winCurtainIdx = rand_r(&seedWin) % (_options->curtainsSize);
+            game.playerCurtainIdx = rand_r(&seedPlayer) % (_options->curtainsSize);
 
             /*** * * ***/
 
@@ -106,7 +106,7 @@ void runSimulation(Simulation* _simulation, Options *_options) {
                 //  as the other is either the winning or the *PLAYER* choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if (_options->curtainsMaxIdx+1 == 3) {
+                if (_options->curtainsSize == 3) {
                     for (int i=0;i<3;i++) {
                         if (i == game.winCurtainIdx) {
                             continue;
@@ -130,7 +130,7 @@ void runSimulation(Simulation* _simulation, Options *_options) {
 
                         /*** * * ***/
 
-                        n = rand_r(&seedHost) % (_options->curtainsMaxIdx + 1);
+                        n = rand_r(&seedHost) % (_options->curtainsSize);
 
                         /*** * * ***/
 
@@ -159,7 +159,7 @@ void runSimulation(Simulation* _simulation, Options *_options) {
                 //  as the other is either the winning or the *HOST* choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if (_options->curtainsMaxIdx+1 == 3) {
+                if (_options->curtainsSize == 3) {
                     for (int i=0;i<3;i++) {
                         if (i == game.playerCurtainIdx) {
                             continue;
@@ -185,7 +185,7 @@ void runSimulation(Simulation* _simulation, Options *_options) {
 
                         /*** * * ***/
 
-                        n = rand_r(&seedPlayer) % _options->curtainsMaxIdx+1;
+                        n = rand_r(&seedPlayer) % _options->curtainsSize;
 
                         /*** * * ***/
 
@@ -236,14 +236,14 @@ void logSimulation(Simulation* _simulation, Options *_options) {
     }
 
     // data
-    for (int s = 0; s <= CONST_STATES_MAX_IDX; s++) {
+    for (int s = 0; s < CONST_STATES_SIZE; s++) {
         printf(
             "%d,%d,%d,%d,%d\n",
 
             _simulation->states[s].doHostReveal,
             _simulation->states[s].doPlayerChange,
             _simulation->states[s].playerWinsCount,
-            _options->curtainsMaxIdx+1,
+            _options->curtainsSize,
             _simulation->states[s].gamesCount
         );
     }
