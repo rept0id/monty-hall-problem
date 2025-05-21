@@ -65,7 +65,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                exit(1);
+                exit(EXIT_FAILURE);
 
                 /*** * * ***/
 
@@ -82,7 +82,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
@@ -104,7 +104,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
@@ -117,7 +117,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
@@ -130,7 +130,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
@@ -160,7 +160,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
@@ -179,7 +179,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
@@ -192,7 +192,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                     /*** * * ***/
 
-                    exit(1);
+                    exit(EXIT_FAILURE);
 
                     /*** * * ***/
 
