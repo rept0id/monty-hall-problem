@@ -83,6 +83,8 @@ This implementation uses **OpenMP** to parallelize the "games" in the simulation
 
 ## Special Statistical Cases and Analysis of the Game
 
+### A. No Reveal From Host
+
 In the classic game, the player is asked about changing or not the picked curtain, right after the host reveals one of the curtains that doesn't have any prize.
 
 In this implementation, there are two more cases, where the player changes or not the curtain, but the host doesn't reveal any curtain.
@@ -101,3 +103,28 @@ What the theory says is that, in the classic game, it's the host that enables th
 Turns out, by running the simulation, that if the host wouldn't reveal one of the curtains, the player changing curtain wouldn't have any impact.
 
 The purpose of those two extra cases, is to prove the theoretical analysis above, that it's the host revealing one of the curtains that allows the player to enter a... new game with better chances of winning.
+
+### B. More than 3 curtains
+
+This implementation allows the caller to optionally set the number of curtains. A number greater than 3 can be used. Less than 3 is not allowed (the player won’t have any curtain to change to).
+
+An example follows below :
+```
+./monty-hall-problem --curtains 5
+Host Reveal,Player Change,Wins,Curtains,Games
+0,0,199953,5,1000000
+1,0,199952,5,1000000
+0,1,200206,5,1000000
+1,1,266819,5,1000000
+
+./monty-hall-problem --curtains 100
+Host Reveal,Player Change,Wins,Curtains,Games
+0,0,9862,100,1000000
+1,0,9861,100,1000000
+0,1,10012,100,1000000
+1,1,10135,100,1000000
+```
+
+This proves that with more than 3 curtains, it's still always a good idea for the player to change curtain after the host reveals one.
+
+But the more the curtains, the smaller the gain from changing.
