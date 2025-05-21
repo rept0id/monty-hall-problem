@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../model/constants.h"
 #include "../model/constantsDefaults.h"
 #include "../model/options.h"
 #include "../model/enumFlagType.h"
@@ -49,29 +50,39 @@ enum EnumFlagType utilGetFlagType(const char* flag) {
 }
 
 void utilReadFlags(int argc, char* argv[], Options *_options) {
-    for (int i = 1; i < argc; i++) { // start from 1 to skip program name
+    for (int pos = 1; pos < argc; pos++) { // start from 1 to skip program name
         enum EnumFlagType flagType;
 
-        flagType = utilGetFlagType(argv[i]);
+        flagType = utilGetFlagType(argv[pos]);
 
         switch (flagType) {
-            case FLAG_TYPE_NOT_FLAG:
+            case FLAG_TYPE_NOT_FLAG: {
                 break;
+            }
 
-            case FLAG_TYPE_UNKNOWN:
-                fprintf(stderr, "Error: Unknown flag %s\n", argv[i]);
+            case FLAG_TYPE_UNKNOWN: {
+                fprintf(stderr, "Error: Unknown flag %s\n", argv[pos]);
+
+                /*** * * ***/
+
+                exit(1);
 
                 /*** * * ***/
 
                 break;
+            }
 
             case FLAG_TYPE_CURTAINS: {
-                int arg;
+                int newCurtainsSize;
 
                 /*** * * ***/
 
-                if (i+1 >= argc) {
-                    fprintf(stderr, "Error: Missing argument for %s flag\n", argv[i]);
+                if (pos+1 >= argc) {
+                    fprintf(stderr, "Error: Missing argument for %s flag\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
 
                     /*** * * ***/
 
@@ -80,21 +91,46 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                arg = atoi(argv[i + 1]);
-                i++;
+                // newCurtainsSize
+                newCurtainsSize = atoi(argv[pos + 1]);
 
                 /*** * * ***/
 
-                if (arg == 0) {
-                    fprintf(stderr, "Error: Invalid argument for %s flag\n", argv[i]);
+                // newCurtainsSize : checks
+
+                // < 0 (error, exit)
+                if (newCurtainsSize < 0) {
+                    fprintf(stderr, "Error: Invalid argument for %s flag: Negative.\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
 
                     /*** * * ***/
 
                     break;
                 }
 
-                if (arg < 0) {
-                    fprintf(stderr, "Error: Invalid argument for %s flag: Negative\n", argv[i]);
+                // == 0 (error, exit)
+                if (newCurtainsSize == 0) {
+                    fprintf(stderr, "Error: Invalid argument for %s flag: Zero.\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
+
+                    /*** * * ***/
+
+                    break;
+                }
+
+                // < CONST_OPTIONS_CURTAINS_SIZE_MIN (error, exit)
+                if (newCurtainsSize < CONST_OPTIONS_CURTAINS_SIZE_MIN) {
+                    fprintf(stderr, "Error: Invalid argument for %s flag: Less than 3 (the player won’t have any curtain to change to).\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
 
                     /*** * * ***/
 
@@ -103,7 +139,11 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                _options->curtainsSize = arg;
+                _options->curtainsSize = newCurtainsSize;
+
+                /*** * * ***/
+
+                pos++;
 
                 /*** * * ***/
 
@@ -111,12 +151,16 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
             }
 
             case FLAG_TYPE_STATE_GAMES: {
-                int arg;
+                int newStateGamesSize;
 
                 /*** * * ***/
 
-                if (i+1 >= argc) {
-                    fprintf(stderr, "Error: Missing argument for %s flag\n", argv[i]);
+                if (pos+1 >= argc) {
+                    fprintf(stderr, "Error: Missing argument for %s flag.\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
 
                     /*** * * ***/
 
@@ -125,21 +169,30 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                arg = atoi(argv[i + 1]);
-                i++;
+                newStateGamesSize = atoi(argv[pos + 1]);
 
                 /*** * * ***/
 
-                if (arg == 0) {
-                    fprintf(stderr, "Error: Invalid argument for %s flag\n", argv[i]);
+                // < 0 (error, exit)
+                if (newStateGamesSize < 0) {
+                    fprintf(stderr, "Error: Invalid argument for %s flag: Negative.\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
 
                     /*** * * ***/
 
                     break;
                 }
 
-                if (arg < 0) {
-                    fprintf(stderr, "Error: Invalid argument for %s flag: Negative\n", argv[i]);
+                // == 0 (error, exit)
+                if (newStateGamesSize == 0) {
+                    fprintf(stderr, "Error: Invalid argument for %s flag : Zero.\n", argv[pos]);
+
+                    /*** * * ***/
+
+                    exit(1);
 
                     /*** * * ***/
 
@@ -148,19 +201,24 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                _options->stateGamesSize = arg;
+                _options->stateGamesSize = newStateGamesSize;
+
+                /*** * * ***/
+
+                pos++;
 
                 /*** * * ***/
 
                 break;
             }
 
-            case FLAG_TYPE_LOG_NO_HEADER:
+            case FLAG_TYPE_LOG_NO_HEADER: {
                 _options->logHeader = false;
 
                 /*** * * ***/
 
                 break;
+            }
         }
     }
 }

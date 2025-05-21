@@ -3,4 +3,6 @@
 
 #define CONST_STATES_SIZE 4
 
+#define CONST_OPTIONS_CURTAINS_SIZE_MIN 3
+
 #endif
