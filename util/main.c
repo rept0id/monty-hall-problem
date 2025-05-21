@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../lib/ratatoi/ratatoi.h"
+
 #include "../model/constants.h"
 #include "../model/constantsDefaults.h"
 #include "../model/options.h"
@@ -53,7 +55,11 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
     for (int pos = 1; pos < argc; pos++) { // start from 1 to skip program name
         enum EnumFlagType flagType;
 
+        /*** * * ***/
+
         flagType = utilGetFlagType(argv[pos]);
+
+        /*** * * ***/
 
         switch (flagType) {
             case FLAG_TYPE_NOT_FLAG: {
@@ -92,7 +98,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
                 /*** * * ***/
 
                 // newCurtainsSize
-                newCurtainsSize = atoi(argv[pos + 1]);
+                newCurtainsSize = ratatoi(argv[pos + 1]);
 
                 /*** * * ***/
 
@@ -169,7 +175,7 @@ void utilReadFlags(int argc, char* argv[], Options *_options) {
 
                 /*** * * ***/
 
-                newStateGamesSize = atoi(argv[pos + 1]);
+                newStateGamesSize = ratatoi(argv[pos + 1]);
 
                 /*** * * ***/
 
