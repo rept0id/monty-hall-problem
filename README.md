@@ -83,7 +83,7 @@ This implementation uses **OpenMP** to parallelize the "games" in the simulation
 
 ## Special Statistical Cases and Analysis of the Game
 
-### A. No Reveal From Host
+### A. No Reveal from Host
 
 In the classic game, the player is asked about changing or not the picked curtain, right after the host reveals one of the curtains that doesn't have any prize.
 
@@ -104,7 +104,7 @@ Turns out, by running the simulation, that if the host wouldn't reveal one of th
 
 The purpose of those two extra cases, is to prove the theoretical analysis above, that it's the host revealing one of the curtains that allows the player to enter a... new game with better chances of winning.
 
-### B. More than 3 curtains
+### B. More than 3 Curtains
 
 This implementation allows the caller to optionally set the number of curtains. A number greater than 3 can be used. Less than 3 is not allowed (the player won’t have any curtain to change to).
 
